@@ -2,8 +2,8 @@
 
 	f.buffer: .space 16384 # luu du lieu cua file
 	f.curr: .word 0 # vi tri con tro trong buffer
-	f.inPath: .asciiz "input_sort.txt"
-	f.outPath: .asciiz "output_sort.txt"
+	f.inPath: .asciiz "E:\\PC\\Desktop\\input_sort.txt"
+	f.outPath: .asciiz "E:\\PC\\Desktop\\output_sort.txt"
 	f: .word 0 # file decriptor
 
 	arr: .word 0:1000 # mang int
@@ -21,7 +21,7 @@ main:
 
 
 	# luu mang arr
-
+	jal writeArray
 
 	li $v0, 10
 	syscall
@@ -163,3 +163,134 @@ readArray:
 	
 	jr $ra
 # doc mang tu file: end
+
+# luu du lieu vao file: begin
+bufferToFile:
+
+	# mo file
+	li $v0, 13
+	la $a0, f.outPath
+	la $a1, 1
+	syscall
+	sw $v0, f
+
+	# ghi du lieu tu buffer vao file
+	li $v0, 15
+	lw $a0, f
+	la $a1, f.buffer
+	lw $a2, f.curr
+	syscall
+
+	# dong file
+	li $v0, 16
+	lw $a0, f
+	syscall
+
+	jr $ra
+# luu du lieu vao file: end
+
+# day 1 so nguyen tai vung nho co dia chi $a0 vao buffer: begin
+pushInt:
+
+	lw $t0, ($a0) # gia tri can day vao buffer
+	li $t1, 0 # dem so chu so
+
+	# vong lap de dem so chu so
+	pushInt.loop1:
+
+		# chia 10
+		div $t0, $t0, 10
+		add $t1, $t1, 1 # tang bien dem
+
+		# dieu kien dung
+		beq $t0, 0, pushInt.endLoop1
+		
+		j pushInt.loop1
+	pushInt.endLoop1:
+
+	lw $t0, ($a0) # gia tri can day vao buffer
+	lw $t2, f.curr # $t2 luu vi tri con tro
+	add $t2, $t2, $t1
+	add $t2, $t2, -1 # t2 = t2 + t1 - 1 (vi tri chu so hang don vi)
+
+	# ghi lan luot tung chu so vao buffer tu phai sang trai
+	pushInt.loop2:
+
+		# dieu kien dung
+		lw $t3, f.curr
+		blt $t2, $t3, pushInt.endLoop2
+
+		# ghi chu so vao buffer[t2]
+		li $t3, 10
+		div $t0, $t3
+		mfhi $t3
+		add $t3, $t3, '0'
+		sb $t3, f.buffer($t2)
+		div $t0, $t0, 10 # chia 10
+
+		add $t2, $t2, -1 # giam bien dem
+
+		j pushInt.loop2
+	pushInt.endLoop2:
+
+	# curr = curr + t1
+	lw $t3, f.curr
+	add $t3, $t3, $t1
+	# them khoang trang
+	li $t2, ' '
+	sb $t2, f.buffer($t3)
+	add $t3, $t3, 1
+	sw $t3, f.curr
+
+	jr $ra
+# day 1 so nguyen tai vung nho co dia chi $a0 vao buffer: end
+
+# ghi mang ra file: begin
+writeArray:
+	
+	sw $zero, f.curr # reset curr = 0
+
+	li $t0, 0 # bien dem
+	lw $t1, n # N
+	la $t2, arr # arr
+	
+	# ghi mang
+	writeArr.loop:
+
+		# dieu kien dung
+		bge $t0, $t1, writeArr.endLoop
+
+		# lay dia chi arr[i]
+		li $t3, 4
+		mult $t0, $t3
+		mflo $a0
+		add $a0, $a0, $t2
+
+		# ghi arr[i]
+		add $sp, $sp, -16
+		sw $ra, ($sp)
+		sw $t0, 4 ($sp)
+		sw $t1, 8 ($sp)
+		sw $t2, 12 ($sp)
+		jal pushInt
+		lw $ra, ($sp)
+		lw $t0, 4 ($sp)
+		lw $t1, 8 ($sp)
+		lw $t2, 12 ($sp)
+		add $sp, $sp, 16
+
+		# tang bien dem len 1
+		add $t0, $t0, 1
+
+		j writeArr.loop
+	writeArr.endLoop:
+	
+	# ghi ra buffer
+	add $sp, $sp, -4
+	sw $ra, ($sp)
+	jal bufferToFile
+	lw $ra, ($sp)
+	add $sp, $sp, 4
+	
+	jr $ra
+# ghi mang ra file: end
