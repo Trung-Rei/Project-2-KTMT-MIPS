@@ -2,8 +2,8 @@
 
 	f.buffer: .space 16384 # luu du lieu cua file
 	f.curr: .word 0 # vi tri con tro trong buffer
-	f.inPath: .asciiz "E:\\PC\\Desktop\\input_sort.txt"
-	f.outPath: .asciiz "E:\\PC\\Desktop\\output_sort.txt"
+	f.inPath: .asciiz "input_sort.txt"
+	f.outPath: .asciiz "output_sort.txt"
 	f: .word 0 # file decriptor
 
 	arr: .word 0:1000 # mang int
@@ -294,3 +294,55 @@ writeArray:
 	
 	jr $ra
 # ghi mang ra file: end
+
+# Code c++ read write buffer
+#   
+#   char buffer[16384];
+#   int curr = 0;
+#   
+#   int arr[1000];
+#   int n;
+#   
+#   doc mang
+#   readint(n);
+#   for (int i = 0; i < n; ++i)
+#   readint(arr[i]);
+#   
+#   int readint()
+#   {
+#   	while (buffer[curr] > 9 || buffer[curr] < 0)
+#   		curr = curr + 1;
+#   	int num = 0;
+#   	while (buffer[curr] <= '9' && buffer[curr] >= '0')
+#   	{
+#   		num = num * 10 + buffer[curr] - '0';
+#   		curr = curr + 1;
+#   	}
+#   	return num;
+#   }
+#   
+#   curr = 0;
+#   
+#   ghi mang
+#   for (int i = 0; i < n; ++i)
+#   writeint(arr[i]);
+#
+#   void writeint(int a)
+#   {
+#   	int num = a;
+#   	int c = 0;
+#   	do {
+#   		num /= 10;
+#   		++c;
+#   	} while (num != 0)
+#   	num = a;
+#   	int tmp = curr;
+#   	for (tmp = tmp + c - 1; tmp >= curr; --tmp)
+#   	{
+#   		buffer[tmp] = num % 10 + '0';
+#   		num /= 10;
+#   	}
+#   	curr = curr + c;
+#   	buffer[curr] = ' ';
+#   	++curr;
+#   }
