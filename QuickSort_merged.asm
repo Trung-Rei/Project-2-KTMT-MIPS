@@ -2,8 +2,8 @@
 
 	f.buffer: .space 16384 # luu du lieu cua file
 	f.curr: .word 0 # vi tri con tro trong buffer
-	f.inPath: .asciiz "E:\\PC\\Desktop\\input_sort.txt"
-	f.outPath: .asciiz "E:\\PC\\Desktop\\output_sort.txt"
+	f.inPath: .asciiz "D:\\game\\hao\\eng\\ktmt\\proj2\\repo\\Project-2-KTMT-MIPS\\input_sort.txt"
+	f.outPath: .asciiz "D:\\game\\hao\\eng\\ktmt\\proj2\\repo\\Project-2-KTMT-MIPS\\output_sort.txt"
 	f: .word 0 # file decriptor
 
 	arr: .word 0:1000 # mang int
@@ -451,16 +451,20 @@ quickSort:
 	# store arg in stack
 	sw $ra, 0($sp)
 	sw $a0, 4($sp)
-	sw $a1, 8($sp)
+	sw $a1, 8($sp)	
 	blt $a0, $a1, quickSort_ifTrue
 	j quickSort_end
 	quickSort_ifTrue:
 		jal partitionFunc
 		# pi = partitionFunc(low = a0, high = a1); pi = $t0
 		move $t0, $v0
+		addi $sp, $sp, -4
+		sw $a1, 0($sp)	# store high for left recursive array
 		# quickSort(low, pi - 1)
 		subi $a1, $t0, 1
 		jal quickSort
+		lw $a1, 0($sp)
+		addi $sp, $sp, 4
 		# quickSort(pi + 1, high)
 		addi $a0, $t0, 1
 		jal quickSort
