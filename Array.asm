@@ -23,7 +23,7 @@ menu3: .asciiz "3. Liet ke cac phan tu la so nguyen to\n"
 menu4: .asciiz "4. Tim max\n"
 menu5: .asciiz "5. Tim phan tu co gia tri x nguoi dung nhap vao\n"
 menu6: .asciiz "6. Thoat chuong trinh\n"
-option: .asciiz "Nhap su lua chon cua ban: "
+option: .asciiz "\nNhap su lua chon cua ban: "
 
 .text
 .globl main
@@ -33,14 +33,7 @@ main:
 
 jal inputSizeOfArr
 jal inputArr
-
 jal menu
-#jal outputArr
-#jal Sum
-#jal Prime
-#jal Max
-#jal findX
-
 b done
 
 # hien thi menu
@@ -90,6 +83,7 @@ loopMenu:
 
 	li $t6, 6
 	beq $v0, $t6, exitMenu
+
 	j loopMenu
 exitMenu:
 	move $ra, $t5
@@ -143,7 +137,8 @@ loopOutputArr:
 	addi $t0, $t0, 4
 	j loopOutputArr
 exitOutputArr:
-	jr $ra
+	#jr $ra
+	j loopMenu
 
 # ham tinh tong 
 Sum:
@@ -163,7 +158,8 @@ exitSum:
 	li $v0, 1
 	move $a0, $s1
 	syscall
-	jr $ra
+	#jr $ra
+	j loopMenu
 
 # kiem tra co phai so nguyen to
 checkPrime:
@@ -182,6 +178,7 @@ exitLoopCheckPrime:
 temp: 
 	li $t3, 1
 	jr $ra
+
 
 #Xuat cac so nguyen to
 Prime:
@@ -210,11 +207,12 @@ loopPrime:
 exitPrime:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
-	jr $ra
+	#jr $ra
+	j loopMenu
 
 Max:
 	li $t0, 4 #index
-	lw $s1, array($zero) #max
+	lw $s1, array($zero) #gia tri max
 	b loopMax
 loopMax:
 	beq $t0, $s0, exitMax
@@ -233,7 +231,8 @@ exitMax:
 	li $v0, 1
 	move $a0, $s1
 	syscall
-	jr $ra
+	#jr $ra
+	j loopMenu
 
 #Tim phan tu gia tri x
 findX:
@@ -256,18 +255,20 @@ exitFindX:
 	li $v0, 4
 	la $a0, true
 	syscall
-
+	li $t7, 4
 	div $t0, $t0, $t7
 
 	li $v0, 1
 	move $a0, $t0
 	syscall
-	jr $ra
+	#jr $ra
+	j loopMenu
 notInclude:
 	li $v0, 4
 	la $a0, false
 	syscall
-	jr $ra
+	#jr $ra
+	j loopMenu
 done:
 
 
