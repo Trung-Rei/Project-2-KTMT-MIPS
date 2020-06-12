@@ -97,6 +97,7 @@ inputSizeOfArr:
 	li $v0, 5
 	syscall
 	bgt $v0, 100, inputSizeOfArr
+	blt $v0, 0, inputSizeOfArr
 	move $s0, $v0
 	li $t7, 4 #size of int
 	mul $s0, $s0, $t7
