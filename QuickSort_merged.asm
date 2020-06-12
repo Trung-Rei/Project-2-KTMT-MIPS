@@ -372,9 +372,9 @@ whileTrue:
 		j rightCondition1
 	leftCondition2:
 		sll $t3, $t1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $t3, 0($t3)		#arr[left]
-		blt $t3, $t0, leftIncr #arr[left] < pivot
+		bltu $t3, $t0, leftIncr #arr[left] < pivot
 		j rightCondition1
 		leftIncr:	#left++
 			addi $t1, $t1, 1
@@ -385,9 +385,9 @@ whileTrue:
 		j nextCommand
 	rightCondition2:
 		sll $t3, $t2, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $t3, 0($t3)		#arr[right]
-		bgt $t3, $t0, rightDecr		#arr[right] > pivot
+		bgtu $t3, $t0, rightDecr		#arr[right] > pivot
 		j nextCommand
 		rightDecr:	#right--
 		subi $t2, $t2, 1
@@ -397,18 +397,18 @@ whileTrue:
 		bge $t1, $t2, leftGreaterThanRight
 		# store arr[left] in $a2; arr[right] in $a3
 		sll $t3, $t1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $a2, 0($t3)
 		sll $t3, $t2, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $a3, 0($t3)
 		jal swap
 		# update in $s0
 		sll $t3, $t1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		sw $a2, 0($t3)
 		sll $t3, $t2, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		sw $a3, 0($t3)
 		#left++
 		addi $t1, $t1, 1
@@ -419,18 +419,18 @@ whileTrue:
 	leftGreaterThanRight:
 		# store arr[left] in $a2; arr[high] in $a3
 		sll $t3, $t1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $a2, 0($t3)
 		sll $t3, $a1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		lw $a3, 0($t3)
 		jal swap
 		# update in $s0
 		sll $t3, $t1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		sw $a2, 0($t3)
 		sll $t3, $a1, 2
-		add $t3, $t3, $s0
+		addu $t3, $t3, $s0
 		sw $a3, 0($t3)
 		#return left
 		move $v0, $t1
