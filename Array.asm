@@ -1,5 +1,5 @@
 .data
-array: .space 400  #Mang co 100 phan tu
+array: .space 4000  #Mang co 100 phan tu
 
 nhap: .asciiz "Nhap So Luong Phan Tu: "
 nhap2: .asciiz "Nhap Phan Tu: "
@@ -96,8 +96,8 @@ inputSizeOfArr:
 	syscall
 	li $v0, 5
 	syscall
-	bgt $v0, 100, inputSizeOfArr
-	blt $v0, 0, inputSizeOfArr
+	bgt $v0, 1000, inputSizeOfArr
+	ble $v0, 0, inputSizeOfArr
 	move $s0, $v0
 	li $t7, 4 #size of int
 	mul $s0, $s0, $t7
